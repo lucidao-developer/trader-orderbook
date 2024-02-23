@@ -1,23 +1,13 @@
 import winston from 'winston'
 
-import { LoggingWinston } from '@google-cloud/logging-winston'
-
 const isProduction = () => process.env.NODE_ENV === 'production'
 
 const LOG_LEVEL = process.env.LOG_LEVEL || 'debug'
-
-const gcpLoggingWinston = new LoggingWinston()
 
 const transports: winston.transport[] = [
   // stdout default
   new winston.transports.Console(),
 ]
-
-// Add cloud logging if in production
-if (isProduction()) {
-  console.log('Enabling cloud logging (reason: in production)')
-  transports.push(gcpLoggingWinston)
-}
 
 const logger = winston.createLogger({
   level: LOG_LEVEL,

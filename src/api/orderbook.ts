@@ -1,20 +1,15 @@
 import { Router, Response } from 'express'
 import { JsonRpcBatchProvider } from '@ethersproject/providers'
 import { NftSwapV4, OrderStatusV4 } from '@traderxyz/nft-swap-sdk'
-import { PubSub } from '@google-cloud/pubsub'
 import { isHexString } from '@ethersproject/bytes'
-import type { orders_v4_nfts, orders_with_latest_status, Prisma } from '@prisma/client'
-import type { RateLimitRequestHandler } from 'express-rate-limit'
+import type { orders_with_latest_status, Prisma } from '@prisma/client'
 import type { NftOrderV4Serialized, SignedNftOrderV4Serialized } from '../types'
 import { logger } from '../logger'
 import { getPrismaClient } from '../prisma-client'
 import { signedNftOrderV4SerializedSchema } from '../validations'
 import { createApiError } from '../errors/api-error'
 import { modelDbOrderToSdkOrder, nftOrderToDbModel } from '../services/api-web/utils/order-parsing'
-import { GCP_PROJECT_ID, getJsonRpcUrlByChainId, getZeroExContract } from '../default-config'
-import { PUBSUB_TOPICS } from '../services/utils/pubsub'
-import { OrderStatusUpdateRequestEvent } from '../services/utils/messaging-types'
-import { getUnixTime } from 'date-fns'
+import { getJsonRpcUrlByChainId, getZeroExContract } from '../default-config'
 
 export enum TradeDirection {
   SellNFT = 0,
@@ -40,6 +35,7 @@ export interface OrderPayload {
 }
 
 const orderToOrderPayload = (dbOrder: orders_with_latest_status): OrderPayload => {
+  console.log('DB Order with latest status : ', dbOrder.nonce)
   return {
     // Add some order data to Ttop level data for searchability/api standadization
     erc20Token: dbOrder.erc20_token,
@@ -136,6 +132,7 @@ const createOrderbookRouter = () => {
         })
       }
     }
+
     const nftTokenId = queryParams.nftTokenId ?? queryParams.erc721TokenId ?? queryParams.erc1155TokenId
     if (nftTokenId !== undefined) {
       if (Array.isArray(nftTokenId)) {
@@ -382,7 +379,6 @@ const createOrderbookRouter = () => {
     const order = req.body.order
     const orderMetadataFromApp: Record<string, string> = req.body.metadata ?? {}
     const chainId: string | number = req.body.chainId?.toString()
-
     if (!chainId) {
       return res.status(400).json(createApiError('CHAIN_ID_MISSING', 'chainId missing from POST body'))
     }
@@ -537,9 +533,9 @@ const createOrderbookRouter = () => {
         .json(createApiError('ERROR_FETCHING_ORDER_STATUS', `Promblem looking up order status via 0x v4 ExchangeProxy`))
     }
 
-    const orderDb = nftOrderToDbModel(signedOrder, chainId.toString(), orderMetadataFromApp)
-
+    let orderDb = nftOrderToDbModel(signedOrder, chainId.toString(), orderMetadataFromApp)
     try {
+
       const createdOrder = await prisma.orders_v4_nfts.create({
         data: {
           ...orderDb,
@@ -549,32 +545,27 @@ const createOrderbookRouter = () => {
         },
       })
 
-      const pubsub = new PubSub({ projectId: GCP_PROJECT_ID })
-      const blockNumberTopic = pubsub.topic(PUBSUB_TOPICS.ValidateOrderStatus)
+      delete (orderDb as any).id; // Supprime la propriété 'id' de l'objet orderDb
 
-      const blockNumberMessage: OrderStatusUpdateRequestEvent = {
+      const createOrderStatus = await prisma.orders_with_latest_status.create({
         data: {
-          orderNonce: signedOrder.nonce,
-          chainId: chainId.toString(10),
+          ...orderDb,
+          fees: orderDb.fees ? orderDb.fees : undefined, // Convertit en string JSON si non-null
+          order_valid: true,
+          date_last_validated: new Date(),
+          order_status: orderDb.expiry_datetime > new Date() ? 'open' : 'expired',
         },
-        eventName: 'order.validate-status',
-        topic: PUBSUB_TOPICS.ValidateOrderStatus,
-      }
-
-      // const _messageId = await blockNumberTopic.publishMessage({
-      //   json: blockNumberMessage,
-      //   orderingKey: chainId.toString(10),
-      //   attributes: {
-      //     chainId: chainId.toString(10),
-      //     nonce: signedOrder.nonce,
-      //   },
-      // })
+      });
 
       const dbResult = await prisma.orders_with_latest_status.findFirst({
         where: {
           nonce: createdOrder.nonce,
         },
       })
+
+      if (!dbResult) {
+        return res.status(400).json(createApiError('ORDER_CREATION_ERROR', 'Error fetching order from db'))
+      }
 
       delete (dbResult as any).system_metadata
 
