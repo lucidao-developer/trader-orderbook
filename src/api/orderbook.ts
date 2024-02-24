@@ -315,29 +315,44 @@ const createOrderbookRouter = () => {
       })
     }
 
-    let metadataFilter: Prisma.JsonObject[] = []
-
-    const buildMetadataFilter = (metadata: Record<string, string>) => {
-      const filterParams: Prisma.JsonObject[] = []
-      for (const key in metadata) {
-        if (metadata.hasOwnProperty(key)) {
-          const value = metadata[key]
-          filterParams.push({
-            [key]: {
-              equals: value,
-            },
-          })
+    const buildMetadataFilter = (filters: any[]): Prisma.orders_with_latest_statusWhereInput[] => {
+      return filters.map(filter => {
+        const condition: Prisma.JsonObject = {};
+        switch (filter.operation) {
+          case 'equals':
+            condition['equals'] = { [filter.key]: filter.value };
+            break;
+          case 'in':
+            // Remarque : Adaptez en fonction de la capacité de votre base de données et Prisma
+            condition['array_contains'] = { [filter.key]: filter.value };
+            break;
+          case 'range':
+            // Prisma ne supporte pas directement 'range' sur JSON; ceci est un exemple hypothétique
+            // Vous devrez peut-être ajuster cette logique en fonction de vos besoins spécifiques
+            condition['gte'] = { [filter.key]: filter.value.min };
+            condition['lte'] = { [filter.key]: filter.value.max };
+            break;
         }
+        return {
+          app_metadata: condition
+        };
+      });
+    };
+
+    const filtersString = queryParams.metadata;
+    if (filtersString) {
+      try {
+        const filters = JSON.parse(filtersString);
+        const metadataFilters = buildMetadataFilter(filters);
+        // Ajout des filtres de métadonnées à filterParamsAND
+        filterParamsAND.push(...metadataFilters);
+      } catch (error) {
+        console.error('Error parsing or applying metadata filters:', error);
+        // Gérez l'erreur comme il se doit
       }
-      return filterParams
     }
-    // Supposons que queryParams.metadata soit une chaîne JSON représentant l'objet metadata
-    const metadataString = queryParams.metadata
-    // Si nous avons des filtres de métadonnées, les construire
-    if (metadataString) {
-      const metadata = JSON.parse(metadataString)
-      metadataFilter = buildMetadataFilter(metadata)
-    }
+
+
     const orderValidity = queryParams.valid?.toString()
     if (orderValidity === 'all') {
       //
@@ -614,6 +629,49 @@ const createOrderbookRouter = () => {
       // return res.status(400).json(createApiError('ORDER_CREATION_ERROR', e))
     }
   })
+
+  orderRouter.post('/orders/refreshMetadata', async (req, res) => {
+    const { nonce, newMetadata } = req.body;
+  
+    if (!nonce || !newMetadata) {
+      return res.status(400).json({ message: "Nonce and newMetadata are required." });
+    }
+  
+    try {
+      // Mise à jour dans la première collection
+      await prisma.orders_v4_nfts.updateMany({
+        where: { nonce },
+        data: { app_metadata: newMetadata },
+      });
+  
+      // Mise à jour dans la deuxième collection
+      const updateResult = await prisma.orders_with_latest_status.updateMany({
+        where: { nonce },
+        data: { app_metadata: newMetadata },
+      });
+  
+      if (updateResult.count === 0) {
+        return res.status(404).json({ message: "Order not found with the provided nonce." });
+      }
+  
+      // Récupérer l'ordre mis à jour pour la réponse, en supposant que l'ordre est unique par nonce
+      const dbResult = await prisma.orders_with_latest_status.findFirst({
+        where: { nonce },
+      });
+  
+      if (!dbResult) {
+        return res.status(404).json({ message: "Failed to fetch the updated order from the database." });
+      }
+  
+      // Convertir l'ordre de la base de données en payload de réponse
+      const orderPayload = orderToOrderPayload(dbResult);
+      return res.status(200).json(orderPayload);
+    } catch (error) {
+      console.error('API: Error refreshing order metadata', { nonce, error });
+      return res.status(500).json({ message: "An error occurred while refreshing the order metadata." });
+    }
+  });
+  
 
   return orderRouter
 }

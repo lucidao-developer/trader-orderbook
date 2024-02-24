@@ -10,6 +10,7 @@ import { getLoggerForService, ServiceNamesLogLabel } from '../../logger'
 import { checkAndUpdateAllOrderStatuses } from '../../api/status-order-check'
 import { cleanUpClosedOrders } from '../../api/clean-db'
 import { startEventListeners } from '../../api/events-listener'
+import rateLimit from 'express-rate-limit'
 
 const logger = getLoggerForService(ServiceNamesLogLabel['api-web'])
 
@@ -27,6 +28,17 @@ const bootstrapApp = async () => {
   app.use(cors())
   app.use(bodyParser.urlencoded({ extended: true }))
   app.use(bodyParser.json())
+
+  // Rate Limiter
+  const limiter = rateLimit({
+    windowMs: 15 * 60 * 1000, // 15 minutes
+    max: 100, // Limite each IP to 100 requests per windowMs
+    standardHeaders: true, // Add headers with limit information
+    legacyHeaders: false, // Don't add X-RateLimit-* headers
+  });
+
+  // Set up rate limiter
+  app.use(limiter);
 
   // Set up routes and middlewares
   // Basic Healthchecks
