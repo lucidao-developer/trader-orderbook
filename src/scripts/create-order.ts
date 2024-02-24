@@ -20,7 +20,7 @@ const PROVIDER = new ethers.providers.StaticJsonRpcProvider(RPC_TESTNET)
 
 const MAKER_SIGNER = MAKER_WALLET.connect(PROVIDER)
 
-const nftSwap = new NftSwapV4(MAKER_SIGNER as any, MAKER_SIGNER, ROPSTEN_CHAIN_ID,{
+const nftSwap = new NftSwapV4(MAKER_SIGNER as any, MAKER_SIGNER, ROPSTEN_CHAIN_ID, {
   zeroExExchangeProxyContractAddress: '0x61dEe972E8C5d0E87849596F98A0b6d6D7B9119d',
 })
 
@@ -47,7 +47,6 @@ const doThing = async () => {
 
   try {
     const order = nftSwap.buildOrder(NFT_ASSET, ERC20_ASSET, MAKER_WALLET_ADDRESS)
-
 
     const signedOrder = await nftSwap.signOrder(order)
 

@@ -2,7 +2,7 @@ import { addresses } from './addresses'
 
 export const CHAIN_IDS = {
   MAINNET: '1',
-  SKALE_TESTNET: '974399131'
+  SKALE_TESTNET: '974399131',
 }
 
 export const CHAIN_IDS_NAMES = {
@@ -14,14 +14,14 @@ const WS_RPC = {
   // mainnet
   [CHAIN_IDS.MAINNET]: process.env.RPC_MAINNET,
   // SKALE_TESTNET
-  [CHAIN_IDS.SKALE_TESTNET]: process.env.RPC_SKALE_TESTNET
+  [CHAIN_IDS.SKALE_TESTNET]: process.env.RPC_SKALE_TESTNET,
 }
 
 const JSON_RPC = {
   // mainnet
   [CHAIN_IDS.MAINNET]: process.env.RPC_MAINNET,
   // SKALE_TESTNET
-  [CHAIN_IDS.SKALE_TESTNET]: process.env.RPC_SKALE_TESTNET
+  [CHAIN_IDS.SKALE_TESTNET]: process.env.RPC_SKALE_TESTNET,
 }
 
 const getZeroExContract = (chainId: string): string => {
@@ -49,10 +49,4 @@ const getJsonRpcUrlByChainId = (chainId: string) => {
   return jsonRpc
 }
 
-export {
-  getWsRpcUrlByChainId,
-  getZeroExContract,
-  getJsonRpcUrlByChainId,
-  WS_RPC,
-  JSON_RPC,
-}
+export { getWsRpcUrlByChainId, getZeroExContract, getJsonRpcUrlByChainId, WS_RPC, JSON_RPC }

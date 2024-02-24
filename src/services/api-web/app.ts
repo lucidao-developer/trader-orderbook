@@ -41,15 +41,15 @@ const bootstrapApp = async () => {
   // Planifiez la tâche pour s'exécuter une fois par jour à minuit
   cron.schedule('0 0 * * *', async () => {
     await checkAndUpdateAllOrderStatuses().then(() => {
-      console.log('Daily order status update task executed.');
-    });
+      console.log('Daily order status update task executed.')
+    })
 
     await cleanUpClosedOrders().then(() => {
-      console.log('Daily closed order cleanup task executed.');
-    });
-  });
+      console.log('Daily closed order cleanup task executed.')
+    })
+  })
 
-  startEventListeners();
+  startEventListeners()
 
   // Error middlewares
   app.use((_req, _res, next) => {

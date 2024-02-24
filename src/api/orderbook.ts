@@ -79,6 +79,7 @@ const createOrderbookRouter = () => {
     order_status: null | 'filled' | 'expired' | 'cancelled'
     direction: string
     order_valid: boolean
+    metadata: string
   }
 
   interface SearchOrdersQueryParams {
@@ -105,6 +106,7 @@ const createOrderbookRouter = () => {
     status: 'open' | 'filled' | 'expired' | 'cancelled' | 'all'
     visibility: 'public' | 'private'
     valid: 'valid' | 'all'
+    metadata: string
   }
 
   orderRouter.get('/orders', async (req, res: Response, next) => {
@@ -115,6 +117,7 @@ const createOrderbookRouter = () => {
     let filterParamsAND: Prisma.Enumerable<Prisma.orders_with_latest_statusWhereInput> = []
     // Collect all filter params manually... (we can automate this later)
     const erc20Token = queryParams.erc20Token
+    console.log('erc20Token : ', erc20Token)
     if (erc20Token) {
       if (Array.isArray(erc20Token)) {
         filterParamsAND.push({
@@ -134,6 +137,7 @@ const createOrderbookRouter = () => {
     }
 
     const nftTokenId = queryParams.nftTokenId ?? queryParams.erc721TokenId ?? queryParams.erc1155TokenId
+    console.log('nftTokenId : ', nftTokenId)
     if (nftTokenId !== undefined) {
       if (Array.isArray(nftTokenId)) {
         filterParamsAND.push({
@@ -151,10 +155,12 @@ const createOrderbookRouter = () => {
         })
       }
     }
+
     const nftToken =
       queryParams.nftToken ??
       queryParams.erc721Token?.toString().toLowerCase() ??
       queryParams.erc1155Token?.toString().toLowerCase()
+    console.log('nftToken : ', nftToken)
     if (nftToken) {
       if (Array.isArray(nftToken)) {
         filterParamsAND.push({
@@ -266,6 +272,7 @@ const createOrderbookRouter = () => {
     const nowPrismaDateTime = new Date().toISOString()
     const orderStatus =
       queryParams.status?.toString() ?? queryParams.order_status?.toString() ?? queryParams.orderStatus?.toString()
+    console.log('orderStatus : ', orderStatus)
     if (orderStatus) {
       if (orderStatus === 'all') {
         // skip adding a filter
@@ -288,7 +295,7 @@ const createOrderbookRouter = () => {
         })
       } else if (orderStatus === 'open') {
         filterParamsAND.push({
-          order_status: null,
+          order_status: 'open',
         })
         filterParamsAND.push({
           expiry_datetime: {
@@ -308,6 +315,29 @@ const createOrderbookRouter = () => {
       })
     }
 
+    let metadataFilter: Prisma.JsonObject[] = []
+
+    const buildMetadataFilter = (metadata: Record<string, string>) => {
+      const filterParams: Prisma.JsonObject[] = []
+      for (const key in metadata) {
+        if (metadata.hasOwnProperty(key)) {
+          const value = metadata[key]
+          filterParams.push({
+            [key]: {
+              equals: value,
+            },
+          })
+        }
+      }
+      return filterParams
+    }
+    // Supposons que queryParams.metadata soit une chaîne JSON représentant l'objet metadata
+    const metadataString = queryParams.metadata
+    // Si nous avons des filtres de métadonnées, les construire
+    if (metadataString) {
+      const metadata = JSON.parse(metadataString)
+      metadataFilter = buildMetadataFilter(metadata)
+    }
     const orderValidity = queryParams.valid?.toString()
     if (orderValidity === 'all') {
       //
@@ -356,6 +386,7 @@ const createOrderbookRouter = () => {
       }
     }
 
+    console.log('filterParamsAND : ', filterParamsAND)
     const queryRes = await prisma.orders_with_latest_status.findMany({
       where: {
         AND: [...filterParamsAND],
@@ -366,12 +397,15 @@ const createOrderbookRouter = () => {
       take: limit,
       skip: offset,
     })
+    console.log('queryRes : ', queryRes)
     const formatted: Array<OrderPayload> = queryRes.map(orderToOrderPayload)
 
     const response = {
       orders: formatted,
     }
     res.json(response)
+
+    console.log('Response : ', response)
   })
 
   // Employee endpoint that can help update
@@ -535,17 +569,17 @@ const createOrderbookRouter = () => {
 
     let orderDb = nftOrderToDbModel(signedOrder, chainId.toString(), orderMetadataFromApp)
     try {
-
       const createdOrder = await prisma.orders_v4_nfts.create({
         data: {
           ...orderDb,
           fees: orderDb.fees ?? [],
           order_valid: true,
           date_last_validated: new Date(),
+          date_created: new Date(),
         },
       })
 
-      delete (orderDb as any).id; // Supprime la propriété 'id' de l'objet orderDb
+      delete (orderDb as any).id // Supprime la propriété 'id' de l'objet orderDb
 
       const createOrderStatus = await prisma.orders_with_latest_status.create({
         data: {
@@ -554,8 +588,9 @@ const createOrderbookRouter = () => {
           order_valid: true,
           date_last_validated: new Date(),
           order_status: orderDb.expiry_datetime > new Date() ? 'open' : 'expired',
+          date_created: new Date(),
         },
-      });
+      })
 
       const dbResult = await prisma.orders_with_latest_status.findFirst({
         where: {
