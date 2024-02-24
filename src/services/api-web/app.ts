@@ -10,7 +10,6 @@ import { getLoggerForService, ServiceNamesLogLabel } from '../../logger'
 import { checkAndUpdateAllOrderStatuses } from '../../api/status-order-check'
 import { cleanUpClosedOrders } from '../../api/clean-db'
 import { startEventListeners } from '../../api/events-listener'
-// import { getRedisClient } from '../../redis-client'
 
 const logger = getLoggerForService(ServiceNamesLogLabel['api-web'])
 
