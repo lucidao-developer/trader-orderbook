@@ -632,37 +632,37 @@ const createOrderbookRouter = () => {
 
   orderRouter.post('/orders/refreshMetadata', async (req, res) => {
     const { nonce, newMetadata } = req.body;
-  
+
     if (!nonce || !newMetadata) {
       return res.status(400).json({ message: "Nonce and newMetadata are required." });
     }
-  
+
     try {
       // Mise à jour dans la première collection
       await prisma.orders_v4_nfts.updateMany({
         where: { nonce },
         data: { app_metadata: newMetadata },
       });
-  
+
       // Mise à jour dans la deuxième collection
       const updateResult = await prisma.orders_with_latest_status.updateMany({
         where: { nonce },
         data: { app_metadata: newMetadata },
       });
-  
+
       if (updateResult.count === 0) {
         return res.status(404).json({ message: "Order not found with the provided nonce." });
       }
-  
+
       // Récupérer l'ordre mis à jour pour la réponse, en supposant que l'ordre est unique par nonce
       const dbResult = await prisma.orders_with_latest_status.findFirst({
         where: { nonce },
       });
-  
+
       if (!dbResult) {
         return res.status(404).json({ message: "Failed to fetch the updated order from the database." });
       }
-  
+
       // Convertir l'ordre de la base de données en payload de réponse
       const orderPayload = orderToOrderPayload(dbResult);
       return res.status(200).json(orderPayload);
@@ -671,7 +671,7 @@ const createOrderbookRouter = () => {
       return res.status(500).json({ message: "An error occurred while refreshing the order metadata." });
     }
   });
-  
+
 
   return orderRouter
 }

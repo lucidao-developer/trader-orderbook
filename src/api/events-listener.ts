@@ -1,5 +1,4 @@
 import { BigNumber, ethers } from 'ethers'
-// Import de vos interfaces
 import { addresses } from '../addresses'
 import { CHAIN_IDS, JSON_RPC } from '../default-config'
 import IZeroEx from '../abis/IZeroEx.json'
