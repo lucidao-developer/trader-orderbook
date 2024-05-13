@@ -39,8 +39,6 @@
     "@ethersproject/constants": "^5.7.0",
     "@ethersproject/contracts": "^5.7.0",
     "@ethersproject/providers": "^5.7.0",
-    "@google-cloud/logging": "^9.8.3",
-    "@google-cloud/logging-winston": "^4.2.3",
     "@google-cloud/pubsub": "^2.19.3",
     "@prisma/client": "4.0.0",
     "@sentry/node": "^6.19.7",
@@ -70,7 +68,7 @@
     "rate-limit-redis": "^3.0.1",
     "sql-template-tag": "^5.0.1",
     "uuid": "^8.3.2",
-    "winston": "^3.7.2",
+    "winston": "^3.13.0",
     "zod": "^3.14.4"
   },
   "scripts": {

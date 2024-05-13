@@ -1,28 +1,26 @@
-import winston from 'winston'
+import winston from 'winston';
 
-import { LoggingWinston } from '@google-cloud/logging-winston'
+const isProduction = () => process.env.NODE_ENV === 'production';
 
-const isProduction = () => process.env.NODE_ENV === 'production'
+const LOG_LEVEL = process.env.LOG_LEVEL || 'debug';
 
-const LOG_LEVEL = process.env.LOG_LEVEL || 'debug'
-
-const gcpLoggingWinston = new LoggingWinston()
-
-const transports: winston.transport[] = [
-  // stdout default
-  new winston.transports.Console(),
-]
-
-// Add cloud logging if in production
-if (isProduction()) {
-  console.log('Enabling cloud logging (reason: in production)')
-  transports.push(gcpLoggingWinston)
-}
+const transports = [
+  // Console transport with formatting
+  new winston.transports.Console({
+    format: winston.format.combine(
+      winston.format.colorize(),
+      winston.format.timestamp({
+        format: 'YYYY-MM-DD HH:mm:ss'
+      }),
+      winston.format.printf(info => `${info.timestamp} [${info.level}]: ${info.message}`)
+    )
+  })
+];
 
 const logger = winston.createLogger({
   level: LOG_LEVEL,
-  transports,
-})
+  transports: transports,
+});
 
 export enum ServiceNamesLogLabel {
   'api-web' = 'api-web',
@@ -37,8 +35,8 @@ export enum ServiceNamesLogLabel {
 }
 
 const getLoggerForService = (serviceName: ServiceNamesLogLabel) => {
-  const childLogger = logger.child({ labels: { serviceName }, name: serviceName })
-  return childLogger
+  const childLogger = logger.child({ labels: { serviceName }, name: serviceName });
+  return childLogger;
 }
 
-export { logger, getLoggerForService }
+export { logger, getLoggerForService };

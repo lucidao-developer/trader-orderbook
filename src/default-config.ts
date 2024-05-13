@@ -12,7 +12,7 @@ export const CHAIN_IDS_NAMES = {
 }
 
 const WS_RPC = {
-  [CHAIN_IDS.POLYGON_AMOY]: process.env.RPC_POLYGON_AMOY
+  [CHAIN_IDS.POLYGON_AMOY]: process.env.RPC_WS_POLYGON_AMOY
 }
 
 const JSON_RPC = {
