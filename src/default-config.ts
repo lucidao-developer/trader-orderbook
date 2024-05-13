@@ -1,27 +1,19 @@
 import { addresses } from './addresses'
 
 export const CHAIN_IDS = {
-  MAINNET: '1',
-  SKALE_TESTNET: '974399131',
+  POLYGON_AMOY: '80002'
 }
 
 export const CHAIN_IDS_NAMES = {
-  [CHAIN_IDS.MAINNET]: 'Mainnet',
-  [CHAIN_IDS.SKALE_TESTNET]: 'giant-half-dual-testnet',
+  [CHAIN_IDS.POLYGON_AMOY]: 'Polygon Amoy Testnet'
 }
 
 const WS_RPC = {
-  // mainnet
-  [CHAIN_IDS.MAINNET]: process.env.RPC_MAINNET,
-  // SKALE_TESTNET
-  [CHAIN_IDS.SKALE_TESTNET]: process.env.RPC_SKALE_TESTNET,
+  [CHAIN_IDS.POLYGON_AMOY]: process.env.RPC_POLYGON_AMOY
 }
 
 const JSON_RPC = {
-  // mainnet
-  [CHAIN_IDS.MAINNET]: process.env.RPC_MAINNET,
-  // SKALE_TESTNET
-  [CHAIN_IDS.SKALE_TESTNET]: process.env.RPC_SKALE_TESTNET,
+  [CHAIN_IDS.POLYGON_AMOY]: process.env.RPC_POLYGON_AMOY
 }
 
 const getZeroExContract = (chainId: string): string => {
