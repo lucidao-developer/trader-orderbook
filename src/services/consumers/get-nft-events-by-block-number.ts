@@ -13,6 +13,7 @@ import {
   DEFAULT_SENTRY_SAMPLE_RATE,
   GCP_PROJECT_ID,
   getJsonRpcUrlByChainId,
+  GCP_SERVICE_ACCOUNT_FILE,
 } from '../../default-config'
 import { getOrderStatusLogsForBlocks } from './utils/exchange-events-parser'
 
@@ -137,7 +138,7 @@ const fetchAndSaveOrderEvents = async (
 }
 
 const startAsync = async () => {
-  const pubsub = new PubSub({ projectId: GCP_PROJECT_ID })
+  const pubsub = new PubSub({ keyFilename: GCP_SERVICE_ACCOUNT_FILE })
 
   const newBlockSub = pubsub.subscription(subscriptionId, {
     flowControl: {

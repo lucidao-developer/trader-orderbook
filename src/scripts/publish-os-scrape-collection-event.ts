@@ -1,6 +1,6 @@
 require('dotenv').config()
 import { PubSub } from '@google-cloud/pubsub'
-import { GCP_PROJECT_ID } from '../default-config'
+import { GCP_PROJECT_ID, GCP_SERVICE_ACCOUNT_FILE } from '../default-config'
 import { NftOpenseaScrapeCollectionByAddressRequestEvent } from '../services/utils/messaging-types'
 import { PUBSUB_TOPICS } from '../services/utils/pubsub'
 
@@ -20,7 +20,7 @@ const createEvent = (contractAddress: string, chainId: string) => {
 const COLLECTIONS_TO_INDEX_MAINNET_ONLY: Array<[string, string]> = [['0xed5af388653567af2f388e6224dc7c4b3241c544', '1']]
 
 const doAsync = async () => {
-  const pubsub = new PubSub({ projectId: GCP_PROJECT_ID })
+  const pubsub = new PubSub({ keyFilename: GCP_SERVICE_ACCOUNT_FILE })
 
   // Create publisher options
   const options = {

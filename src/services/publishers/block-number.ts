@@ -9,6 +9,7 @@ import {
   DEFAULT_SENTRY_DSN,
   DEFAULT_SENTRY_SAMPLE_RATE,
   GCP_PROJECT_ID,
+  GCP_SERVICE_ACCOUNT_FILE,
   getWsRpcUrlByChainId,
 } from '../../default-config'
 
@@ -45,7 +46,7 @@ const runBlockWatcherAsync = async (chainId: string) => {
   }
   const web3 = createAlchemyWeb3(alchemyRpcUrl)
 
-  const pubsub = new PubSub({ projectId: GCP_PROJECT_ID })
+  const pubsub = new PubSub({ keyFilename: GCP_SERVICE_ACCOUNT_FILE })
 
   const blockNumberTopic = pubsub.topic(PUBSUB_TOPICS.BlockNumberUpdate)
 

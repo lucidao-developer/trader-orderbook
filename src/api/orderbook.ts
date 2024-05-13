@@ -11,7 +11,7 @@ import { getPrismaClient } from '../prisma-client'
 import { signedNftOrderV4SerializedSchema } from '../validations'
 import { createApiError } from '../errors/api-error'
 import { modelDbOrderToSdkOrder, nftOrderToDbModel } from '../services/api-web/utils/order-parsing'
-import { GCP_PROJECT_ID, getJsonRpcUrlByChainId, getZeroExContract } from '../default-config'
+import { GCP_PROJECT_ID, GCP_SERVICE_ACCOUNT_FILE, getJsonRpcUrlByChainId, getZeroExContract } from '../default-config'
 import { PUBSUB_TOPICS } from '../services/utils/pubsub'
 import { OrderStatusUpdateRequestEvent } from '../services/utils/messaging-types'
 import { getUnixTime } from 'date-fns'
@@ -38,6 +38,8 @@ export interface OrderPayload {
     blockNumber: number | null
   }
 }
+
+const asyncHandler = fn => (req, res, next) => Promise.resolve(fn(req, res, next)).catch(next);
 
 const orderToOrderPayload = (dbOrder: orders_with_latest_status): OrderPayload => {
   return {
@@ -111,7 +113,7 @@ const createOrderbookRouter = () => {
     valid: 'valid' | 'all'
   }
 
-  orderRouter.get('/orders', async (req, res: Response, next) => {
+  orderRouter.get('/orders', asyncHandler(async (req, res: Response, next) => {
     const queryParams: Partial<SearchOrdersQueryParams> = req.query
 
     logger.info(`Received orderbook request`, { ...queryParams })
@@ -375,10 +377,10 @@ const createOrderbookRouter = () => {
       orders: formatted,
     }
     res.json(response)
-  })
+  }))
 
   // Employee endpoint that can help update
-  orderRouter.post('/order', async (req, res: Response, next) => {
+  orderRouter.post('/order', asyncHandler(async (req, res: Response, next) => {
     const order = req.body.order
     const orderMetadataFromApp: Record<string, string> = req.body.metadata ?? {}
     const chainId: string | number = req.body.chainId?.toString()
@@ -587,7 +589,7 @@ const createOrderbookRouter = () => {
       return next(e)
       // return res.status(400).json(createApiError('ORDER_CREATION_ERROR', e))
     }
-  })
+  }))
 
   return orderRouter
 }

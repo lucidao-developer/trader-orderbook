@@ -11,6 +11,7 @@ import {
   DEFAULT_SENTRY_DSN,
   DEFAULT_SENTRY_SAMPLE_RATE,
   GCP_PROJECT_ID,
+  GCP_SERVICE_ACCOUNT_FILE,
 } from '../../default-config'
 
 Sentry.init({
@@ -94,7 +95,7 @@ const fetchAndSaveBlock = async (blockNumber: number, chainId: string, hash: str
 }
 
 const startAsync = async () => {
-  const pubsub = new PubSub({ projectId: GCP_PROJECT_ID })
+  const pubsub = new PubSub({ keyFilename: GCP_SERVICE_ACCOUNT_FILE })
 
   const newBlockSub = pubsub.subscription(subscriptionId, {
     flowControl: {

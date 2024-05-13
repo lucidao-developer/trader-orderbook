@@ -8,6 +8,7 @@ import {
   DEFAULT_SENTRY_DSN,
   DEFAULT_SENTRY_SAMPLE_RATE,
   GCP_PROJECT_ID,
+  GCP_SERVICE_ACCOUNT_FILE,
   getWsRpcUrlByChainId,
 } from '../../default-config'
 
@@ -31,7 +32,7 @@ const publishMessageToTopic = async (
   nftMetadataMessage: NftMetadataRequestEvent | NftMetadataCollectionRequestEvent,
   chainId: string
 ) => {
-  const pubsub = new PubSub({ projectId: GCP_PROJECT_ID })
+  const pubsub = new PubSub({ keyFilename: GCP_SERVICE_ACCOUNT_FILE })
   const nftUpdateTopic = pubsub.topic(PUBSUB_TOPICS.NftMetadataUpdateRequest)
   const messageId = await nftUpdateTopic.publishMessage({
     json: nftMetadataMessage,

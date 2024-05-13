@@ -4,7 +4,7 @@ import { getPrismaClient } from '../../prisma-client'
 import type { NftOpenseaScrapeCollectionByAddressRequestEvent } from '../utils/messaging-types'
 import { PubSubMessage, PUBSUB_SUBSCRIPTIONS } from '../utils/pubsub'
 import { getLoggerForService, ServiceNamesLogLabel } from '../../logger'
-import { DEFAULT_SENTRY_DSN, DEFAULT_SENTRY_SAMPLE_RATE, GCP_PROJECT_ID } from '../../default-config'
+import { DEFAULT_SENTRY_DSN, DEFAULT_SENTRY_SAMPLE_RATE, GCP_PROJECT_ID, GCP_SERVICE_ACCOUNT_FILE } from '../../default-config'
 import {
   fetchOpenseaCollectionByContractAddress,
   OpenSeaV1CollectionByContractAddressResponsePayload,
@@ -62,7 +62,7 @@ export const upsertOpenSeaCollectionScrapedData = async (
 }
 
 const startAsync = async () => {
-  const pubsub = new PubSub({ projectId: GCP_PROJECT_ID })
+  const pubsub = new PubSub({ keyFilename: GCP_SERVICE_ACCOUNT_FILE })
 
   const newBlockSub = pubsub.subscription(subscriptionId, {
     flowControl: {

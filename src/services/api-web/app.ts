@@ -18,6 +18,17 @@ const winstonExpressMiddleware = (req, res, next) => {
   next();
 };
 
+function errorHandler(err, req, res, next) {
+  // Log the error internally
+  console.error(err);
+
+  // Respond to the client
+  res.status(500).send({
+      error: 'Internal Server Error',
+      message: err.message || 'An unexpected error occurred'
+  });
+}
+
 const bootstrapApp = async () => {
   const isProduction = process.env.NODE_ENV === 'production'
   logger.debug('Initializing API web service express app...', { isProduction })
@@ -60,6 +71,7 @@ const bootstrapApp = async () => {
   app.use('/nft/metadata', createNftMetadataRequestRouter())
 
   app.use(Sentry.Handlers.errorHandler())
+  app.use(errorHandler);
 
   app.use((_req, _res, next) => {
     const err = new Error('Not Found') as any

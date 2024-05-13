@@ -17,6 +17,7 @@ import {
   DEFAULT_SENTRY_SAMPLE_RATE,
   GCP_PROJECT_ID,
   getJsonRpcUrlByChainId,
+  GCP_SERVICE_ACCOUNT_FILE,
 } from '../../default-config'
 import { getOrderStatusLogsForBlocks } from './utils/exchange-events-parser'
 import { fetchCollection, fetchNftMetadataFromAlchemy, getNftMetadataOnAnyChain } from '../utils/nfts'
@@ -32,7 +33,7 @@ const prisma = getPrismaClient()
 
 const logger = getLoggerForService(ServiceNamesLogLabel['consumer:nft-metadata-request'])
 const startAsync = async () => {
-  const pubsub = new PubSub({ projectId: GCP_PROJECT_ID })
+  const pubsub = new PubSub({ keyFilename: GCP_SERVICE_ACCOUNT_FILE })
 
   const nftMetadataUpdateRequest = pubsub.subscription(subscriptionId, {
     flowControl: {
