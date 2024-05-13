@@ -4,58 +4,19 @@ const DEFAULT_SENTRY_DSN = process.env.SENTRY_DSN
 const DEFAULT_SENTRY_SAMPLE_RATE = 1.0
 
 export const CHAIN_IDS = {
-  MAINNET: '1',
-  ROPSTEN: '3',
-  RINKEBY: '4',
-  POLYGON: '137',
-  POLYGON_MUMBAI: '80001',
-  ARBITRUM: '42161',
-  OPTIMISM: '10',
-  GOERLI: '5',
+  POLYGON_AMOY: '80002'
 }
 
 export const CHAIN_IDS_NAMES = {
-  [CHAIN_IDS.MAINNET]: 'Mainnet',
-  [CHAIN_IDS.ROPSTEN]: 'Ropsten',
-  [CHAIN_IDS.POLYGON]: 'Polygon',
-  [CHAIN_IDS.POLYGON_MUMBAI]: 'Polygon Mumbai Testnet',
-  [CHAIN_IDS.ARBITRUM]: 'Arbitrum',
-  [CHAIN_IDS.OPTIMISM]: 'Optimism',
-  [CHAIN_IDS.GOERLI]: 'Goerli',
+  [CHAIN_IDS.POLYGON_AMOY]: 'Polygon Amoy Testnet'
 }
 
 const WS_RPC = {
-  // mainnet
-  [CHAIN_IDS.MAINNET]: process.env.RPC_MAINNET,
-  // ropsten
-  [CHAIN_IDS.ROPSTEN]: process.env.RPC_ROPSTEN,
-  // polygon
-  [CHAIN_IDS.POLYGON]: process.env.RPC_POLYGON,
-  // polygon mumbai
-  [CHAIN_IDS.POLYGON_MUMBAI]: process.env.RPC_POLYGON_MUMBAI,
-  // arbitrum
-  [CHAIN_IDS.ARBITRUM]: process.env.RPC_MAINNET_ARBITRUM,
-  // optimism
-  [CHAIN_IDS.OPTIMISM]: process.env.RPC_OPTIMISM,
-  // goerli
-  [CHAIN_IDS.GOERLI]: process.env.RPC_GOERLI,
+  [CHAIN_IDS.POLYGON_AMOY]: process.env.RPC_POLYGON_AMOY
 }
 
 const JSON_RPC = {
-  // mainnet
-  [CHAIN_IDS.MAINNET]: process.env.RPC_MAINNET,
-  // ropsten
-  [CHAIN_IDS.ROPSTEN]: process.env.RPC_ROPSTEN,
-  // polygon
-  [CHAIN_IDS.POLYGON]: process.env.RPC_POLYGON,
-  // polygon mumbai
-  [CHAIN_IDS.POLYGON_MUMBAI]: process.env.RPC_POLYGON_MUMBAI,
-  // arbitrum
-  [CHAIN_IDS.ARBITRUM]: process.env.RPC_MAINNET_ARBITRUM,
-  // optimism
-  [CHAIN_IDS.OPTIMISM]: process.env.RPC_OPTIMISM,
-  // goerli
-  [CHAIN_IDS.GOERLI]: process.env.RPC_GOERLI,
+  [CHAIN_IDS.POLYGON_AMOY]: process.env.RPC_POLYGON_AMOY
 }
 
 const getZeroExContract = (chainId: string): string => {
