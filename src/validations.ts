@@ -23,7 +23,6 @@ export const eRC1155OrderStructSerializedSchema = z.object({
   fees: z.array(feeStructSerializedSchema),
   erc1155Token: z.string(),
   erc1155TokenId: z.string(),
-  erc1155TokenProperties: z.array(propertyStructSerializedSchema),
   erc1155TokenAmount: z.string(),
 })
 
@@ -38,7 +37,6 @@ export const eRC721OrderStructSerializedSchema = z.object({
   fees: z.array(feeStructSerializedSchema),
   erc721Token: z.string(),
   erc721TokenId: z.string(),
-  erc721TokenProperties: z.array(propertyStructSerializedSchema),
 })
 
 export const nftOrderV4SerializedSchema = z.union([

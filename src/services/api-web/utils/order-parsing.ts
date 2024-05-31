@@ -4,11 +4,10 @@ import {
   SignedERC1155OrderStructSerialized,
   NftOrderV4Serialized,
   SignedNftOrderV4Serialized,
-} from '@traderxyz/nft-swap-sdk/dist/sdk/v4/types'
+} from '../../../api/types/typchain'
 import { randomUUID } from 'crypto'
 import fromUnixTime from 'date-fns/fromUnixTime'
 import { getZeroExContract } from '../../../default-config'
-import { PropertyStructSerialized } from '../../../types'
 import { NftOrderV4DatabaseModel } from '../../../types-complex'
 
 const modelDbOrderToSdkOrder = (orderFromDb: orders_with_latest_status): NftOrderV4Serialized => {
@@ -20,7 +19,6 @@ const modelDbOrderToSdkOrder = (orderFromDb: orders_with_latest_status): NftOrde
         erc20TokenAmount: orderFromDb.erc20_token_amount,
         erc721Token: orderFromDb.nft_token,
         erc721TokenId: orderFromDb.nft_token_id,
-        erc721TokenProperties: (orderFromDb.nft_token_properties as any[]) ?? [],
         expiry: orderFromDb.expiry,
         fees: (orderFromDb.fees as any[]) ?? [],
         maker: orderFromDb.maker,
@@ -37,7 +35,6 @@ const modelDbOrderToSdkOrder = (orderFromDb: orders_with_latest_status): NftOrde
         erc1155Token: orderFromDb.nft_token,
         erc1155TokenId: orderFromDb.nft_token_id,
         erc1155TokenAmount: orderFromDb.nft_token_amount,
-        erc1155TokenProperties: (orderFromDb.nft_token_properties as any[]) ?? [],
         expiry: orderFromDb.expiry,
         fees: (orderFromDb.fees as any[]) ?? [],
         maker: orderFromDb.maker,
@@ -62,20 +59,17 @@ const nftOrderToDbModel = (
   let nftTokenAmount: string
   let nftTokenId: string
   let nftType: string
-  let nftTokenProperties: Array<PropertyStructSerialized> = []
 
   if ('erc1155Token' in signedOrder) {
     nftToken = signedOrder.erc1155Token
     nftTokenAmount = signedOrder.erc1155TokenAmount
     nftTokenId = signedOrder.erc1155TokenId
     nftType = 'ERC1155'
-    nftTokenProperties = signedOrder.erc1155TokenProperties ?? []
   } else if ('erc721Token' in signedOrder) {
     nftToken = signedOrder.erc721Token
     nftTokenAmount = '1'
     nftTokenId = signedOrder.erc721TokenId
     nftType = 'ERC721'
-    nftTokenProperties = signedOrder.erc721TokenProperties ?? []
   } else {
     throw new Error('typesafe')
   }
@@ -96,7 +90,6 @@ const nftOrderToDbModel = (
     nft_token_amount: nftTokenAmount,
     nft_token_id: nftTokenId,
     nft_type: nftType,
-    nft_token_properties: nftTokenProperties,
     fees: signedOrder.fees,
     nonce: signedOrder.nonce,
     signature: signedOrder.signature,

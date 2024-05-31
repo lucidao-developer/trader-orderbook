@@ -40,7 +40,6 @@
     "@ethersproject/contracts": "^5.7.0",
     "@ethersproject/providers": "^5.7.0",
     "@prisma/client": "4.0.0",
-    "@traderxyz/nft-swap-sdk": "^0.32.0",
     "@vercel/fetch": "^6.2.0",
     "@zoralabs/nft-metadata": "^1.2.6",
     "base-64": "^1.0.0",
