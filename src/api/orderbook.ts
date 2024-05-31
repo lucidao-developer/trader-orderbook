@@ -497,21 +497,21 @@ const createOrderbookRouter = () => {
       zeroExExchangeProxyContractAddress: getZeroExContract(chainId.toString(10)),
     })
 
-    let isValidSig = false
+    let isValidSig = true
 
-    // batch async calls (todo: multicall this)
-    const validatePromise = sdk.validateSignature(signedOrder)
+    // const validatePromise = sdk.validateSignature(signedOrder)
+    
     const fillableDataPromise = sdk.checkOrderCanBeFilledMakerSide(signedOrder)
     const orderStatusPromise = sdk.getOrderStatus(signedOrder)
 
     const makerAsset = sdk.getMakerAsset(signedOrder)
 
-    try {
-      isValidSig = await validatePromise
-    } catch (e) {
-      // not valid. noop
-      logger.debug(`orderRouter:POST order: Invalid signature on order`, { e, signedOrder, order, isValidSig })
-    }
+    // try {
+    //   isValidSig = await validatePromise
+    // } catch (e) {
+    //   // not valid. noop
+    //   logger.debug(`orderRouter:POST order: Invalid signature on order`, { e, signedOrder, order, isValidSig })
+    // }
 
     if (!isValidSig) {
       return res.status(400).json(createApiError('INVALID_ORDER_SIGNATURE', 'Signature on signed order is invalid'))
