@@ -1,3 +1,4 @@
+import { NftSwapV4, OrderStatusV4 } from 'forlootandglory-nft-swap-sdk';
 import { Router, Response } from 'express'
 import { JsonRpcBatchProvider } from '@ethersproject/providers'
 import { isHexString } from '@ethersproject/bytes'
@@ -491,95 +492,95 @@ const createOrderbookRouter = () => {
 
     const jsonRpc = new JsonRpcBatchProvider(jsonRpcUrl, parsedChainId)
 
-    // const sdk = new NftSwapV4(jsonRpc, undefined as any, parsedChainId, {
-    //   // Provide exchangeproxy address manually so we don't depend on the sdk for addresses
-    //   zeroExExchangeProxyContractAddress: getZeroExContract(chainId.toString(10)),
-    // })
+    const sdk = new NftSwapV4(jsonRpc, undefined as any, parsedChainId, {
+      // Provide exchangeproxy address manually so we don't depend on the sdk for addresses
+      zeroExExchangeProxyContractAddress: getZeroExContract(chainId.toString(10)),
+    })
 
-    // let isValidSig = true
+    let isValidSig = true
 
-    // const validatePromise = sdk.validateSignature(signedOrder)
+    const validatePromise = sdk.validateSignature(signedOrder)
 
-    // const fillableDataPromise = sdk.checkOrderCanBeFilledMakerSide(signedOrder)
-    // const orderStatusPromise = sdk.getOrderStatus(signedOrder)
+    const fillableDataPromise = sdk.checkOrderCanBeFilledMakerSide(signedOrder)
+    const orderStatusPromise = sdk.getOrderStatus(signedOrder)
 
-    // const makerAsset = sdk.getMakerAsset(signedOrder)
+    const makerAsset = sdk.getMakerAsset(signedOrder)
 
-    // try {
-    //   isValidSig = await validatePromise
-    // } catch (e) {
-    //   // not valid. noop
-    //   logger.debug(`orderRouter:POST order: Invalid signature on order`, { e, signedOrder, order, isValidSig })
-    // }
+    try {
+      isValidSig = await validatePromise
+    } catch (e) {
+      // not valid. noop
+      logger.debug(`orderRouter:POST order: Invalid signature on order`, { e, signedOrder, order, isValidSig })
+    }
 
-    // if (!isValidSig) {
-    //   return res.status(400).json(createApiError('INVALID_ORDER_SIGNATURE', 'Signature on signed order is invalid'))
-    // }
+    if (!isValidSig) {
+      return res.status(400).json(createApiError('INVALID_ORDER_SIGNATURE', 'Signature on signed order is invalid'))
+    }
 
-    // try {
-    //   const fillableData = await fillableDataPromise
-    //   if (!fillableData.hasBalance) {
-    //     return res
-    //       .status(400)
-    //       .json(
-    //         createApiError(
-    //           'INSUFFICIENT_MAKER_BALANCE',
-    //           `Maker does not have sufficient balance of ${makerAsset.tokenAddress} (${makerAsset.type})`
-    //         )
-    //       )
-    //   }
-    //   if (!fillableData.isApproved) {
-    //     return res
-    //       .status(400)
-    //       .json(
-    //         createApiError(
-    //           'INSUFFICIENT_MAKER_ALLOWANCE',
-    //           `Maker does not have sufficient allowance of ${makerAsset.tokenAddress} (${makerAsset.type})`
-    //         )
-    //       )
-    //   }
-    // } catch (e) {
-    //   logger.info(`Error fetching allowance or balance data`, { e, signedOrder })
-    //   return res
-    //     .status(400)
-    //     .json(
-    //       createApiError(
-    //         'ERROR_FETCHING_ORDER_DATA',
-    //         `Error looking up maker balance and approval data. Order may be using incorrect/bad token ${makerAsset.tokenAddress}, chainId: ${chainId}.`
-    //       )
-    //     )
-    // }
+    try {
+      const fillableData = await fillableDataPromise
+      if (!fillableData.hasBalance) {
+        return res
+          .status(400)
+          .json(
+            createApiError(
+              'INSUFFICIENT_MAKER_BALANCE',
+              `Maker does not have sufficient balance of ${makerAsset.tokenAddress} (${makerAsset.type})`
+            )
+          )
+      }
+      if (!fillableData.isApproved) {
+        return res
+          .status(400)
+          .json(
+            createApiError(
+              'INSUFFICIENT_MAKER_ALLOWANCE',
+              `Maker does not have sufficient allowance of ${makerAsset.tokenAddress} (${makerAsset.type})`
+            )
+          )
+      }
+    } catch (e) {
+      logger.info(`Error fetching allowance or balance data`, { e, signedOrder })
+      return res
+        .status(400)
+        .json(
+          createApiError(
+            'ERROR_FETCHING_ORDER_DATA',
+            `Error looking up maker balance and approval data. Order may be using incorrect/bad token ${makerAsset.tokenAddress}, chainId: ${chainId}.`
+          )
+        )
+    }
 
-    // try {
-    //   const orderStatus = await orderStatusPromise
-    //   switch (orderStatus) {
-    //     case OrderStatusV4.Expired:
-    //       return res
-    //         .status(400)
-    //         .json(createApiError('ORDER_EXPIRED', `Order expired: Expiry unix timestamp: ${signedOrder.expiry}`))
+    try {
+      const orderStatus = await orderStatusPromise
+      switch (orderStatus) {
+        case OrderStatusV4.Expired:
+          return res
+            .status(400)
+            .json(createApiError('ORDER_EXPIRED', `Order expired: Expiry unix timestamp: ${signedOrder.expiry}`))
 
-    //     case OrderStatusV4.Invalid:
-    //       return res
-    //         .status(400)
-    //         .json(createApiError('ORDER_INVALID', `Order marked invalid per 0x V4 orderStatus RPC call`))
-    //     case OrderStatusV4.Unfillable:
-    //       return res
-    //         .status(400)
-    //         .json(createApiError('ORDER_UNFILLABLE', `Order marked unfillable per 0x V4 orderStatus RPC call`))
+        case OrderStatusV4.Invalid:
+          return res
+            .status(400)
+            .json(createApiError('ORDER_INVALID', `Order marked invalid per 0x V4 orderStatus RPC call`))
+        case OrderStatusV4.Unfillable:
+          return res
+            .status(400)
+            .json(createApiError('ORDER_UNFILLABLE', `Order marked unfillable per 0x V4 orderStatus RPC call`))
 
-    //     case OrderStatusV4.Fillable:
-    //       // valid order, do nothing!
-    //       break
-    //     default:
-    //       break
-    //   }
-    // } catch (e) {
-    //   logger.info(`Error fetching order status`, { e, signedOrder })
+        case OrderStatusV4.Fillable:
+          // valid order, do nothing!
+          break
+        default:
+          break
+      }
+    } catch (e) {
+      logger.info(`Error fetching order status`, { e, signedOrder })
 
-    //   return res
-    //     .status(400)
-    //     .json(createApiError('ERROR_FETCHING_ORDER_STATUS', `Promblem looking up order status via 0x v4 ExchangeProxy`))
-    // }
+      return res
+        .status(400)
+        .json(createApiError('ERROR_FETCHING_ORDER_STATUS', `Promblem looking up order status via 0x v4 ExchangeProxy`))
+    }
 
     let orderDb = nftOrderToDbModel(signedOrder, chainId.toString(), orderMetadataFromApp)
     try {
