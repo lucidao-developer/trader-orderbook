@@ -35,6 +35,9 @@ const bootstrapApp = async () => {
     max: 100, // Limite each IP to 100 requests per windowMs
     standardHeaders: true, // Add headers with limit information
     legacyHeaders: false, // Don't add X-RateLimit-* headers
+    keyGenerator: function (req) {
+      return req.headers['x-forwarded-for'] || req.connection.remoteAddress || req.socket.remoteAddress || req.connection.socket.remoteAddress;
+    },
   });
 
   // Set up rate limiter
