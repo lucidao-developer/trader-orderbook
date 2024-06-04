@@ -36,7 +36,9 @@ const bootstrapApp = async () => {
     standardHeaders: true, // Add headers with limit information
     legacyHeaders: false, // Don't add X-RateLimit-* headers
     keyGenerator: function (req) {
-      return req.headers['x-forwarded-for'] || req.connection.remoteAddress || req.socket.remoteAddress || req.connection.socket.remoteAddress;
+      const forwarded = req.headers['x-forwarded-for'];
+      const ip = Array.isArray(forwarded) ? forwarded[0] : forwarded;
+      return ip || req.socket.remoteAddress || 'default';
     },
   });
 
