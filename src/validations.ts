@@ -7,11 +7,6 @@ export const feeStructSerializedSchema = z.object({
   feeData: z.string(),
 })
 
-export const propertyStructSerializedSchema = z.object({
-  propertyValidator: z.string(),
-  propertyData: z.union([z.string(), z.array(z.number())]),
-})
-
 export const eRC1155OrderStructSerializedSchema = z.object({
   direction: z.number(),
   maker: z.string(),
@@ -77,7 +72,6 @@ export const nftOrderV4DatabaseModelZodSchema = z.object({
   nft_token: z.string(),
   nft_token_id: z.string(),
   nft_token_amount: z.string(),
-  nft_token_properties: z.array(propertyStructSerializedSchema),
   system_metadata: z.any().optional(),
   app_metadata: z.any().optional(),
   chain_id: z.string(),

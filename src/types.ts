@@ -22,7 +22,6 @@ export type FeeStructSerialized = {
 //   fees: FeeStruct[];
 //   erc1155Token: string;
 //   erc1155TokenId: BigNumberish;
-//   erc1155TokenProperties: PropertyStruct[];
 //   erc1155TokenAmount: BigNumberish;
 // };
 
@@ -51,7 +50,6 @@ export type ERC1155OrderStructSerialized = {
 //   fees: FeeStruct[];
 //   erc721Token: string;
 //   erc721TokenId: BigNumberish;
-//   erc721TokenProperties: PropertyStruct[];
 // };
 
 export type ERC721OrderStructSerialized = {

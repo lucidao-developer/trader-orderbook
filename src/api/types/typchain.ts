@@ -91,10 +91,6 @@ export interface Fee {
     amount: BigNumber;
     feeData: string;
 }
-export interface Property {
-    propertyValidator: string;
-    propertyData: string;
-}
 export declare type NftOrderV4 = ERC1155OrderStruct | ERC721OrderStruct;
 export declare type NftOrderV4Serialized = ERC1155OrderStructSerialized | ERC721OrderStructSerialized;
 export interface SignedERC721OrderStruct extends ERC721OrderStruct {

@@ -174,24 +174,6 @@ const _abi = [
         type: 'uint256',
       },
       {
-        components: [
-          {
-            internalType: 'contract IPropertyValidator',
-            name: 'propertyValidator',
-            type: 'address',
-          },
-          {
-            internalType: 'bytes',
-            name: 'propertyData',
-            type: 'bytes',
-          },
-        ],
-        indexed: false,
-        internalType: 'struct LibNFTOrder.Property[]',
-        name: 'erc1155TokenProperties',
-        type: 'tuple[]',
-      },
-      {
         indexed: false,
         internalType: 'uint128',
         name: 'erc1155TokenAmount',
@@ -360,25 +342,7 @@ const _abi = [
         internalType: 'uint256',
         name: 'erc721TokenId',
         type: 'uint256',
-      },
-      {
-        components: [
-          {
-            internalType: 'contract IPropertyValidator',
-            name: 'propertyValidator',
-            type: 'address',
-          },
-          {
-            internalType: 'bytes',
-            name: 'propertyData',
-            type: 'bytes',
-          },
-        ],
-        indexed: false,
-        internalType: 'struct LibNFTOrder.Property[]',
-        name: 'erc721TokenProperties',
-        type: 'tuple[]',
-      },
+      }
     ],
     name: 'ERC721OrderPreSigned',
     type: 'event',
@@ -1440,23 +1404,6 @@ const _abi = [
             type: 'uint256',
           },
           {
-            components: [
-              {
-                internalType: 'contract IPropertyValidator',
-                name: 'propertyValidator',
-                type: 'address',
-              },
-              {
-                internalType: 'bytes',
-                name: 'propertyData',
-                type: 'bytes',
-              },
-            ],
-            internalType: 'struct LibNFTOrder.Property[]',
-            name: 'erc1155TokenProperties',
-            type: 'tuple[]',
-          },
-          {
             internalType: 'uint128',
             name: 'erc1155TokenAmount',
             type: 'uint128',
@@ -1590,23 +1537,6 @@ const _abi = [
             internalType: 'uint256',
             name: 'erc721TokenId',
             type: 'uint256',
-          },
-          {
-            components: [
-              {
-                internalType: 'contract IPropertyValidator',
-                name: 'propertyValidator',
-                type: 'address',
-              },
-              {
-                internalType: 'bytes',
-                name: 'propertyData',
-                type: 'bytes',
-              },
-            ],
-            internalType: 'struct LibNFTOrder.Property[]',
-            name: 'erc721TokenProperties',
-            type: 'tuple[]',
           },
         ],
         internalType: 'struct LibNFTOrder.ERC721Order[]',
@@ -2715,23 +2645,6 @@ const _abi = [
             name: 'erc721TokenId',
             type: 'uint256',
           },
-          {
-            components: [
-              {
-                internalType: 'contract IPropertyValidator',
-                name: 'propertyValidator',
-                type: 'address',
-              },
-              {
-                internalType: 'bytes',
-                name: 'propertyData',
-                type: 'bytes',
-              },
-            ],
-            internalType: 'struct LibNFTOrder.Property[]',
-            name: 'erc721TokenProperties',
-            type: 'tuple[]',
-          },
         ],
         internalType: 'struct LibNFTOrder.ERC721Order[]',
         name: 'sellOrders',
@@ -2805,23 +2718,6 @@ const _abi = [
             internalType: 'uint256',
             name: 'erc721TokenId',
             type: 'uint256',
-          },
-          {
-            components: [
-              {
-                internalType: 'contract IPropertyValidator',
-                name: 'propertyValidator',
-                type: 'address',
-              },
-              {
-                internalType: 'bytes',
-                name: 'propertyData',
-                type: 'bytes',
-              },
-            ],
-            internalType: 'struct LibNFTOrder.Property[]',
-            name: 'erc721TokenProperties',
-            type: 'tuple[]',
           },
         ],
         internalType: 'struct LibNFTOrder.ERC721Order[]',
@@ -2971,23 +2867,6 @@ const _abi = [
             type: 'uint256',
           },
           {
-            components: [
-              {
-                internalType: 'contract IPropertyValidator',
-                name: 'propertyValidator',
-                type: 'address',
-              },
-              {
-                internalType: 'bytes',
-                name: 'propertyData',
-                type: 'bytes',
-              },
-            ],
-            internalType: 'struct LibNFTOrder.Property[]',
-            name: 'erc1155TokenProperties',
-            type: 'tuple[]',
-          },
-          {
             internalType: 'uint128',
             name: 'erc1155TokenAmount',
             type: 'uint128',
@@ -3110,23 +2989,6 @@ const _abi = [
             internalType: 'uint256',
             name: 'erc721TokenId',
             type: 'uint256',
-          },
-          {
-            components: [
-              {
-                internalType: 'contract IPropertyValidator',
-                name: 'propertyValidator',
-                type: 'address',
-              },
-              {
-                internalType: 'bytes',
-                name: 'propertyData',
-                type: 'bytes',
-              },
-            ],
-            internalType: 'struct LibNFTOrder.Property[]',
-            name: 'erc721TokenProperties',
-            type: 'tuple[]',
           },
         ],
         internalType: 'struct LibNFTOrder.ERC721Order',
@@ -4589,23 +4451,6 @@ const _abi = [
             type: 'uint256',
           },
           {
-            components: [
-              {
-                internalType: 'contract IPropertyValidator',
-                name: 'propertyValidator',
-                type: 'address',
-              },
-              {
-                internalType: 'bytes',
-                name: 'propertyData',
-                type: 'bytes',
-              },
-            ],
-            internalType: 'struct LibNFTOrder.Property[]',
-            name: 'erc1155TokenProperties',
-            type: 'tuple[]',
-          },
-          {
             internalType: 'uint128',
             name: 'erc1155TokenAmount',
             type: 'uint128',
@@ -4697,23 +4542,6 @@ const _abi = [
             internalType: 'uint256',
             name: 'erc1155TokenId',
             type: 'uint256',
-          },
-          {
-            components: [
-              {
-                internalType: 'contract IPropertyValidator',
-                name: 'propertyValidator',
-                type: 'address',
-              },
-              {
-                internalType: 'bytes',
-                name: 'propertyData',
-                type: 'bytes',
-              },
-            ],
-            internalType: 'struct LibNFTOrder.Property[]',
-            name: 'erc1155TokenProperties',
-            type: 'tuple[]',
           },
           {
             internalType: 'uint128',
@@ -4830,23 +4658,6 @@ const _abi = [
             name: 'erc721TokenId',
             type: 'uint256',
           },
-          {
-            components: [
-              {
-                internalType: 'contract IPropertyValidator',
-                name: 'propertyValidator',
-                type: 'address',
-              },
-              {
-                internalType: 'bytes',
-                name: 'propertyData',
-                type: 'bytes',
-              },
-            ],
-            internalType: 'struct LibNFTOrder.Property[]',
-            name: 'erc721TokenProperties',
-            type: 'tuple[]',
-          },
         ],
         internalType: 'struct LibNFTOrder.ERC721Order',
         name: 'order',
@@ -4934,23 +4745,6 @@ const _abi = [
             internalType: 'uint256',
             name: 'erc721TokenId',
             type: 'uint256',
-          },
-          {
-            components: [
-              {
-                internalType: 'contract IPropertyValidator',
-                name: 'propertyValidator',
-                type: 'address',
-              },
-              {
-                internalType: 'bytes',
-                name: 'propertyData',
-                type: 'bytes',
-              },
-            ],
-            internalType: 'struct LibNFTOrder.Property[]',
-            name: 'erc721TokenProperties',
-            type: 'tuple[]',
           },
         ],
         internalType: 'struct LibNFTOrder.ERC721Order',
@@ -6100,23 +5894,6 @@ const _abi = [
             name: 'erc721TokenId',
             type: 'uint256',
           },
-          {
-            components: [
-              {
-                internalType: 'contract IPropertyValidator',
-                name: 'propertyValidator',
-                type: 'address',
-              },
-              {
-                internalType: 'bytes',
-                name: 'propertyData',
-                type: 'bytes',
-              },
-            ],
-            internalType: 'struct LibNFTOrder.Property[]',
-            name: 'erc721TokenProperties',
-            type: 'tuple[]',
-          },
         ],
         internalType: 'struct LibNFTOrder.ERC721Order',
         name: 'sellOrder',
@@ -6190,23 +5967,6 @@ const _abi = [
             internalType: 'uint256',
             name: 'erc721TokenId',
             type: 'uint256',
-          },
-          {
-            components: [
-              {
-                internalType: 'contract IPropertyValidator',
-                name: 'propertyValidator',
-                type: 'address',
-              },
-              {
-                internalType: 'bytes',
-                name: 'propertyData',
-                type: 'bytes',
-              },
-            ],
-            internalType: 'struct LibNFTOrder.Property[]',
-            name: 'erc721TokenProperties',
-            type: 'tuple[]',
           },
         ],
         internalType: 'struct LibNFTOrder.ERC721Order',
@@ -6746,23 +6506,6 @@ const _abi = [
             type: 'uint256',
           },
           {
-            components: [
-              {
-                internalType: 'contract IPropertyValidator',
-                name: 'propertyValidator',
-                type: 'address',
-              },
-              {
-                internalType: 'bytes',
-                name: 'propertyData',
-                type: 'bytes',
-              },
-            ],
-            internalType: 'struct LibNFTOrder.Property[]',
-            name: 'erc1155TokenProperties',
-            type: 'tuple[]',
-          },
-          {
             internalType: 'uint128',
             name: 'erc1155TokenAmount',
             type: 'uint128',
@@ -6848,23 +6591,6 @@ const _abi = [
             internalType: 'uint256',
             name: 'erc721TokenId',
             type: 'uint256',
-          },
-          {
-            components: [
-              {
-                internalType: 'contract IPropertyValidator',
-                name: 'propertyValidator',
-                type: 'address',
-              },
-              {
-                internalType: 'bytes',
-                name: 'propertyData',
-                type: 'bytes',
-              },
-            ],
-            internalType: 'struct LibNFTOrder.Property[]',
-            name: 'erc721TokenProperties',
-            type: 'tuple[]',
           },
         ],
         internalType: 'struct LibNFTOrder.ERC721Order',
@@ -7003,23 +6729,6 @@ const _abi = [
             type: 'uint256',
           },
           {
-            components: [
-              {
-                internalType: 'contract IPropertyValidator',
-                name: 'propertyValidator',
-                type: 'address',
-              },
-              {
-                internalType: 'bytes',
-                name: 'propertyData',
-                type: 'bytes',
-              },
-            ],
-            internalType: 'struct LibNFTOrder.Property[]',
-            name: 'erc1155TokenProperties',
-            type: 'tuple[]',
-          },
-          {
             internalType: 'uint128',
             name: 'erc1155TokenAmount',
             type: 'uint128',
@@ -7152,23 +6861,6 @@ const _abi = [
             internalType: 'uint256',
             name: 'erc721TokenId',
             type: 'uint256',
-          },
-          {
-            components: [
-              {
-                internalType: 'contract IPropertyValidator',
-                name: 'propertyValidator',
-                type: 'address',
-              },
-              {
-                internalType: 'bytes',
-                name: 'propertyData',
-                type: 'bytes',
-              },
-            ],
-            internalType: 'struct LibNFTOrder.Property[]',
-            name: 'erc721TokenProperties',
-            type: 'tuple[]',
           },
         ],
         internalType: 'struct LibNFTOrder.ERC721Order',
@@ -7677,23 +7369,6 @@ const _abi = [
             type: 'uint256',
           },
           {
-            components: [
-              {
-                internalType: 'contract IPropertyValidator',
-                name: 'propertyValidator',
-                type: 'address',
-              },
-              {
-                internalType: 'bytes',
-                name: 'propertyData',
-                type: 'bytes',
-              },
-            ],
-            internalType: 'struct LibNFTOrder.Property[]',
-            name: 'erc1155TokenProperties',
-            type: 'tuple[]',
-          },
-          {
             internalType: 'uint128',
             name: 'erc1155TokenAmount',
             type: 'uint128',
@@ -7784,23 +7459,6 @@ const _abi = [
             internalType: 'uint256',
             name: 'erc1155TokenId',
             type: 'uint256',
-          },
-          {
-            components: [
-              {
-                internalType: 'contract IPropertyValidator',
-                name: 'propertyValidator',
-                type: 'address',
-              },
-              {
-                internalType: 'bytes',
-                name: 'propertyData',
-                type: 'bytes',
-              },
-            ],
-            internalType: 'struct LibNFTOrder.Property[]',
-            name: 'erc1155TokenProperties',
-            type: 'tuple[]',
           },
           {
             internalType: 'uint128',
@@ -7916,23 +7574,6 @@ const _abi = [
             name: 'erc721TokenId',
             type: 'uint256',
           },
-          {
-            components: [
-              {
-                internalType: 'contract IPropertyValidator',
-                name: 'propertyValidator',
-                type: 'address',
-              },
-              {
-                internalType: 'bytes',
-                name: 'propertyData',
-                type: 'bytes',
-              },
-            ],
-            internalType: 'struct LibNFTOrder.Property[]',
-            name: 'erc721TokenProperties',
-            type: 'tuple[]',
-          },
         ],
         internalType: 'struct LibNFTOrder.ERC721Order',
         name: 'order',
@@ -8020,23 +7661,6 @@ const _abi = [
             name: 'erc721TokenId',
             type: 'uint256',
           },
-          {
-            components: [
-              {
-                internalType: 'contract IPropertyValidator',
-                name: 'propertyValidator',
-                type: 'address',
-              },
-              {
-                internalType: 'bytes',
-                name: 'propertyData',
-                type: 'bytes',
-              },
-            ],
-            internalType: 'struct LibNFTOrder.Property[]',
-            name: 'erc721TokenProperties',
-            type: 'tuple[]',
-          },
         ],
         internalType: 'struct LibNFTOrder.ERC721Order',
         name: 'order',
@@ -8075,7 +7699,7 @@ const _abi = [
     stateMutability: 'view',
     type: 'function',
   },
-]
+];
 
 export class IZeroEx__factory {
   static readonly abi = _abi
