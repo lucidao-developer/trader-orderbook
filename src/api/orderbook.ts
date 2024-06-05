@@ -500,9 +500,11 @@ const createOrderbookRouter = () => {
     let isValidSig = true
 
     const validatePromise = sdk.validateSignature(signedOrder)
-
+    console.log('validatePromise : ', validatePromise)
     const fillableDataPromise = sdk.checkOrderCanBeFilledMakerSide(signedOrder)
+    console.log('fillableDataPromise : ', fillableDataPromise)
     const orderStatusPromise = sdk.getOrderStatus(signedOrder)
+    console.log('orderStatusPromise : ', orderStatusPromise)
 
     const makerAsset = sdk.getMakerAsset(signedOrder)
 
