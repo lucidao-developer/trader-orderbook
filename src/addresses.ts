@@ -9,7 +9,7 @@ const addresses: { [key: string]: AddressesForChain | undefined } = {
     wrappedNativeToken: '0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2',
   },
   '974399131': {
-    exchange: '0x6402A461549e67742D9fDA1cd2C91217E8311909',
+    exchange: '0x66Ab05D7694cc5a8eECD80096819a4167699a961',
     wrappedNativeToken: '0xc778417e063141139fce010982780140aa0cd5ab',
   },
 }
