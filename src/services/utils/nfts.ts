@@ -137,7 +137,7 @@ const fetchNftMetadataFromOpenSea = async (contractAddress: string, tokenId: str
     `https://api.opensea.io/api/v1/asset/${contractAddress}/${tokenId}/?include_orders=false`,
     {
       headers: {
-        'X-API-KEY': DEFAULT_OPENSEA_API_KEY,
+        'X-API-KEY': DEFAULT_OPENSEA_API_KEY!,
         Accept: 'application/json',
       },
     }

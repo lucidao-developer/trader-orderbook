@@ -74,14 +74,14 @@ const fetchOpenseaCollectionByContractAddress = async (
   chainId: string
 ): Promise<OpenSeaV1CollectionByContractAddressResponsePayload | null> => {
   let fetchUrl = `https://api.opensea.io/api/v1/asset_contract/${contractAddress}`
-  if (chainId === CHAIN_IDS.ROPSTEN) {
+  if (chainId === CHAIN_IDS.POLYGON_AMOY) {
     fetchUrl = `https://testnets-api.opensea.io/api/v1/asset_contract/${contractAddress}`
   }
 
   let headers: Record<string, string> = {
-    'X-API-KEY': DEFAULT_OPENSEA_API_KEY,
+    'X-API-KEY': DEFAULT_OPENSEA_API_KEY!,
   }
-  if (chainId === CHAIN_IDS.ROPSTEN) {
+  if (chainId === CHAIN_IDS.POLYGON_AMOY) {
     headers = {}
   }
 
