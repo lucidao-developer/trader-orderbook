@@ -8,9 +8,7 @@
   "devDependencies": {
     "@cloudflare/workers-types": "^3.8.0",
     "@cloudflare/wrangler": "^1.19.12",
-    "@typechain/ethers-v5": "^10.1.0",
     "@types/express": "^4.17.13",
-    "@types/ioredis": "^4.28.10",
     "@types/jest": "^27.4.1",
     "@types/lodash": "^4.14.182",
     "@types/node": "^17.0.31",
@@ -25,8 +23,6 @@
     "ts-loader": "9.3.0",
     "ts-node": "^10.7.0",
     "ts-node-dev": "^1.1.8",
-    "ts-to-zod": "^1.10.0",
-    "typechain": "^8.1.0",
     "typescript": "^4.6.4",
     "webpack": "^5.72.0"
   },
@@ -42,7 +38,6 @@
     "@prisma/client": "4.0.0",
     "@traderxyz/nft-swap-sdk": "git+https://github.com/lucidao-developer/nft-swap-sdk.git#0.34.1",
     "@vercel/fetch": "^6.2.0",
-    "@zoralabs/nft-metadata": "^1.2.6",
     "base-64": "^1.0.0",
     "body-parser": "^1.20.0",
     "cabin": "^9.1.2",
@@ -54,7 +49,6 @@
     "express": "^4.18.1",
     "express-rate-limit": "^7.1.5",
     "helmet": "^5.0.2",
-    "ioredis": "^5.0.4",
     "lodash": "^4.17.21",
     "logdna-winston": "^4.0.1",
     "node-cron": "^3.0.0",
@@ -62,11 +56,9 @@
     "ohmyfetch": "^0.4.16",
     "pg-template-tag": "^0.1.2",
     "prettier": "^2.6.2",
-    "rate-limit-redis": "^3.0.1",
     "sql-template-tag": "^5.0.1",
     "uuid": "^8.3.2",
-    "winston": "^3.7.2",
-    "zod": "^3.14.4"
+    "winston": "^3.7.2"
   },
   "scripts": {
     "build": "tsc",
@@ -83,8 +75,6 @@
     "typecheck": "tsc --noEmit",
     "prisma:pull": "npx prisma db pull",
     "prisma:generate": "npx prisma generate",
-    "zod:generate": "yarn ts-to-zod src/types.ts src/validations.ts",
-    "prisma:sync": "yarn prisma:pull && yarn prisma:generate",
-    "generate-types": "typechain --out-dir 'src/contracts' --target=ethers-v5 'src/abis/**/*.json'"
+    "prisma:sync": "yarn prisma:pull && yarn prisma:generate"
   }
 }

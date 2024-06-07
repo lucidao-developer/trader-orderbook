@@ -425,7 +425,6 @@ const createOrderbookRouter = () => {
   // Employee endpoint that can help update
   orderRouter.post('/order', async (req, res: Response, next) => {
     const order = req.body.order
-    console.log(order);
     const orderMetadataFromApp: Record<string, string> = req.body.metadata ?? {}
     const chainId: string | number = req.body.chainId?.toString()
     if (!chainId) {
@@ -500,8 +499,6 @@ const createOrderbookRouter = () => {
     })
 
     let isValidSig = true
-
-    console.log(signedOrder);
 
     const validatePromise = sdk.validateSignature(signedOrder)
     const fillableDataPromise = sdk.checkOrderCanBeFilledMakerSide(signedOrder)
@@ -626,7 +623,6 @@ const createOrderbookRouter = () => {
 
       return res.status(200).json(orderPayload)
     } catch (e: any) {
-      console.log(e)
       logger.error('API: Error creating order', { error: e })
       return next(e)
       // return res.status(400).json(createApiError('ORDER_CREATION_ERROR', e))
