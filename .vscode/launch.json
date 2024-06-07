@@ -4,14 +4,18 @@
         {
             "type": "node",
             "request": "launch",
-            "name": "Launch Express App",
-            "skipFiles": [
-                "<node_internals>/**"
+            "name": "Launch Express App with ts-node-dev",
+            "runtimeExecutable": "/home/alesauro/.nvm/versions/node/v16.20.2/bin/node",
+            "runtimeArgs": [
+                "/home/alesauro/.nvm/versions/node/v16.20.2/bin/ts-node-dev",
+                "--transpile-only",
+                "--files",
+                "./src/services/api-web/index.ts"
             ],
-            "program": "${workspaceFolder}/src/services/api-web/index.ts",
             "env": {
                 "NODE_ENV": "development"
-            }
+            },
+            "cwd": "${workspaceFolder}"
         },
         {
             "type": "node",
