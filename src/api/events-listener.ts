@@ -32,9 +32,9 @@ async function updateOrderStatus(nonce: BigNumber, newStatus: string) {
 }
 
 export function startEventListeners() {
-  const provider = new ethers.providers.JsonRpcProvider(JSON_RPC[CHAIN_IDS.SKALE_TESTNET])
+  const provider = new ethers.providers.JsonRpcProvider(JSON_RPC[CHAIN_IDS.POLYGON_AMOY])
   const contract = new ethers.Contract(
-    addresses[CHAIN_IDS.SKALE_TESTNET]?.exchange.toString()!,
+    addresses[CHAIN_IDS.POLYGON_AMOY]?.exchange.toString()!,
     IZeroEx.compilerOutput.abi,
     provider
   )
