@@ -3,10 +3,9 @@ import { Router, Response } from 'express'
 import { JsonRpcBatchProvider } from '@ethersproject/providers'
 import { isHexString } from '@ethersproject/bytes'
 import type { orders_with_latest_status, Prisma } from '@prisma/client'
-import type { NftOrderV4Serialized, SignedNftOrderV4Serialized } from './types/typchain'
+import type { NftOrderV4Serialized } from './types/typchain'
 import { logger } from '../logger'
 import { getPrismaClient } from '../prisma-client'
-import { signedNftOrderV4SerializedSchema } from '../validations'
 import { createApiError } from '../errors/api-error'
 import { modelDbOrderToSdkOrder, nftOrderToDbModel } from '../services/api-web/utils/order-parsing'
 import { getJsonRpcUrlByChainId, getZeroExContract } from '../default-config'
@@ -426,6 +425,7 @@ const createOrderbookRouter = () => {
   // Employee endpoint that can help update
   orderRouter.post('/order', async (req, res: Response, next) => {
     const order = req.body.order
+    console.log(order);
     const orderMetadataFromApp: Record<string, string> = req.body.metadata ?? {}
     const chainId: string | number = req.body.chainId?.toString()
     if (!chainId) {
@@ -435,13 +435,15 @@ const createOrderbookRouter = () => {
       return res.status(400).json(createApiError('ORDER_MISSING', 'order missing from POST body'))
     }
 
-    let signedOrder: SignedNftOrderV4Serialized
-    try {
-      signedOrder = signedNftOrderV4SerializedSchema.parse(order)
-    } catch (e: any) {
-      logger.info('Validation error in order post handler', { error: e })
-      return res.status(400).json(createApiError('ORDER_VALIDATION_ERROR', e))
-    }
+    const signedOrder = order;
+
+    // let signedOrder: SignedNftOrderV4Serialized
+    // try {
+    //   signedOrder = signedNftOrderV4SerializedSchema.parse(order)
+    // } catch (e: any) {
+    //   logger.info('Validation error in order post handler', { error: e })
+    //   return res.status(400).json(createApiError('ORDER_VALIDATION_ERROR', e))
+    // }
 
     if (!isHexString(signedOrder.taker)) {
       return res
