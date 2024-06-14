@@ -71,11 +71,12 @@ COPY package.json .
 
 # Copy the production dependencies from the deps stage and also
 # the built application from the build stage into the image.
+COPY --from=deps /usr/src/app/prisma ./prisma
 COPY --from=deps /usr/src/app/node_modules ./node_modules
 COPY --from=build /usr/src/app/dist ./dist
 
 # Expose the port that the application listens on.
-EXPOSE 5001
+EXPOSE 5000
 
 # Run the application.
 CMD node dist/services/api-web/index.js
