@@ -1,19 +1,19 @@
 import { addresses } from './addresses'
 
 export const CHAIN_IDS = {
-  POLYGON_AMOY: '80002'
+  POLYGON_AMOY: '80002',
 }
 
 export const CHAIN_IDS_NAMES = {
-  [CHAIN_IDS.POLYGON_AMOY]: 'Polygon Amoy Testnet'
+  [CHAIN_IDS.POLYGON_AMOY]: 'Polygon Amoy Testnet',
 }
 
 const WS_RPC = {
-  [CHAIN_IDS.POLYGON_AMOY]: process.env.RPC_POLYGON_AMOY
+  [CHAIN_IDS.POLYGON_AMOY]: process.env.RPC_WS_POLYGON_AMOY,
 }
 
 const JSON_RPC = {
-  [CHAIN_IDS.POLYGON_AMOY]: process.env.RPC_POLYGON_AMOY
+  [CHAIN_IDS.POLYGON_AMOY]: process.env.RPC_POLYGON_AMOY,
 }
 
 const getZeroExContract = (chainId: string): string => {
