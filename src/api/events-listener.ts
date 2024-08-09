@@ -3,9 +3,12 @@ import { addresses } from '../addresses'
 import { CHAIN_IDS, JSON_RPC, WS_RPC } from '../default-config'
 import IZeroEx from '../abis/IZeroEx.json'
 import { getPrismaClient } from '../prisma-client'
+import { getLoggerForService, ServiceNamesLogLabel } from '../logger'
 // Adresse du contrat
 
 const prisma = getPrismaClient()
+
+const logger = getLoggerForService(ServiceNamesLogLabel['api-web'])
 
 // Fonction générique pour mettre à jour le statut de l'ordre
 async function updateOrderStatus(nonce: BigNumber, newStatus: string) {
@@ -22,12 +25,12 @@ async function updateOrderStatus(nonce: BigNumber, newStatus: string) {
         where: { nonce: order.nonce },
         data: { order_status: newStatus },
       })
-      console.log(`Order ${nonceAsString} updated to '${newStatus}'.`)
+      logger.debug(`Order ${nonceAsString} updated to '${newStatus}'.`)
     } else {
-      console.log(`Order ${nonceAsString} not found.`)
+      logger.error(`Order ${nonceAsString} not found.`)
     }
   } catch (error) {
-    console.error('Error updating order status:', error)
+    logger.error('Error updating order status:', error)
   }
 }
 
@@ -54,28 +57,28 @@ export function startEventListeners() {
       erc1155FillAmount,
       matcher
     ) => {
-      console.log('ERC1155 Order Filled:', { maker, nonce })
+      logger.debug('ERC1155 Order Filled:', { maker, nonce })
       await updateOrderStatus(nonce, 'filled')
     }
   )
 
   contract.on(contract.filters.ERC1155OrderCancelled(), async (maker, nonce) => {
-    console.log('ERC1155 Order Cancelled:', { maker, nonce })
+    logger.debug('ERC1155 Order Cancelled:', { maker, nonce })
     await updateOrderStatus(nonce, 'cancelled')
   })
 
   contract.on(
     contract.filters.ERC721OrderFilled(),
     async (direction, maker, taker, nonce, erc20Token, erc20TokenAmount, erc721Token, erc721TokenId, matcher) => {
-      console.log('ERC721 Order Filled:', { maker, nonce })
+      logger.debug('ERC721 Order Filled:', { maker, nonce })
       await updateOrderStatus(nonce, 'filled')
     }
   )
 
   contract.on(contract.filters.ERC721OrderCancelled(), async (maker, nonce) => {
-    console.log('ERC721 Order Cancelled:', { maker, nonce })
+    logger.debug('ERC721 Order Cancelled:', { maker, nonce })
     await updateOrderStatus(nonce, 'cancelled')
   })
 
-  console.log('Event listeners started.')
+  logger.debug('Event listeners started.')
 }
