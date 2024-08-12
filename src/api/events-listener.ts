@@ -1,9 +1,10 @@
-import { BigNumber, ethers } from 'ethers'
+import { BigNumber, ethers, providers } from 'ethers'
 import { addresses } from '../addresses'
 import { CHAIN_IDS, JSON_RPC, WS_RPC } from '../default-config'
 import IZeroEx from '../abis/IZeroEx.json'
 import { getPrismaClient } from '../prisma-client'
 import { getLoggerForService, ServiceNamesLogLabel } from '../logger'
+import { sleep } from '../services/utils/sleep'
 // Adresse du contrat
 
 const prisma = getPrismaClient()
@@ -34,9 +35,53 @@ async function updateOrderStatus(nonce: BigNumber, newStatus: string) {
   }
 }
 
+type KeepAliveParams = {
+  provider: ethers.providers.WebSocketProvider
+  onDisconnect: (err: any) => void
+  expectedPongBack?: number
+  checkInterval?: number
+}
+
+const keepAlive = ({ provider, onDisconnect, expectedPongBack = 15000, checkInterval = 7500 }: KeepAliveParams) => {
+  let pingTimeout: NodeJS.Timeout | null = null
+  let keepAliveInterval: NodeJS.Timeout | null = null
+
+  provider._websocket.on('open', () => {
+    keepAliveInterval = setInterval(() => {
+      provider._websocket.ping()
+
+      // Use `WebSocket#terminate()`, which immediately destroys the connection,
+      // instead of `WebSocket#close()`, which waits for the close timer.
+      // Delay should be equal to the interval at which your server
+      // sends out pings plus a conservative assumption of the latency.
+      pingTimeout = setTimeout(() => {
+        provider._websocket.terminate()
+      }, expectedPongBack)
+    }, checkInterval)
+  })
+
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  provider._websocket.on('close', (err: any) => {
+    if (keepAliveInterval) clearInterval(keepAliveInterval)
+    if (pingTimeout) clearTimeout(pingTimeout)
+    onDisconnect(err)
+  })
+
+  provider._websocket.on('pong', () => {
+    if (pingTimeout) clearInterval(pingTimeout)
+  })
+}
+
 export function startEventListeners() {
-  // const provider = new ethers.providers.JsonRpcProvider(JSON_RPC[CHAIN_IDS.POLYGON_AMOY])
   const wsProvider = new ethers.providers.WebSocketProvider(WS_RPC[CHAIN_IDS.POLYGON_AMOY] as string)
+  keepAlive({
+    provider: wsProvider,
+    onDisconnect: (err) => {
+      startEventListeners()
+      logger.error('The ws connection was closed', JSON.stringify(err, null, 2))
+    },
+  })
+
   const contract = new ethers.Contract(
     addresses[CHAIN_IDS.POLYGON_AMOY]?.exchange.toString()!,
     IZeroEx.compilerOutput.abi,
